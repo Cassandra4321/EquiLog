@@ -19,10 +19,10 @@ jobs:
         dotnet-version: 8.0.x
 
     - name: Restore dependencies
-      run: dotnet restore Backend/EquiLog.sln
+      run: dotnet restore Backend/EquiLog/EquiLog.sln
 
     - name: Build project
-      run: dotnet build Backend/EquiLog.sln --no-restore
+      run: dotnet build Backend/EquiLog/EquiLog.sln --no-restore
 
     - name: Show success message
       if: success()
