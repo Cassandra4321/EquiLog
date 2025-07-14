@@ -11,6 +11,7 @@ namespace EquiLog.API.Helpers
 
             var superAdminEmail = configuration["SuperAdmin:Email"];
             var superAdminPassword = configuration["SuperAdmin:Password"];
+            var superAdminPhoneNumber = configuration["SuperAdmin:PhoneNumber"];
 
             if (string.IsNullOrWhiteSpace(superAdminEmail) || string.IsNullOrWhiteSpace(superAdminPassword))
             {
@@ -25,6 +26,8 @@ namespace EquiLog.API.Helpers
                 {
                     UserName = superAdminEmail,
                     Email = superAdminEmail,
+                    PhoneNumber = superAdminPhoneNumber,
+                    PhoneNumberConfirmed = true,
                     FirstName = "Stable",
                     LastName = "Owner",
                     EmailConfirmed = true
@@ -34,6 +37,13 @@ namespace EquiLog.API.Helpers
 
                 if (result.Succeeded)
                 {
+                    var createdUser = await userManager.FindByEmailAsync(superAdminEmail);
+                    var phoneResult = await userManager.SetPhoneNumberAsync(createdUser, superAdminPhoneNumber);
+
+                    if (!phoneResult.Succeeded)
+                    {
+                        throw new Exception("Could not set phone number: " + string.Join(", ", phoneResult.Errors.Select(e => e.Description)));
+                    }
                     await userManager.AddToRoleAsync(newUser, "StableOwner");
                 }
                 else

@@ -9,7 +9,7 @@ namespace EquiLog.DAL.Models
         public string FirstName { get; set; } = null!;
 
         [Required]
-        public string LastName { get; set; } = string.Empty;
+        public string LastName { get; set; } = null!;
 
     }
 }
