@@ -1,20 +1,42 @@
+using EquiLog.API.Helpers;
+using EquiLog.DAL.Context;
+using EquiLog.DAL.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace EquiLog.API
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            builder.Configuration.AddUserSecrets<Program>();
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddDbContext<AppDbContext>(options =>
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddIdentity<AppUser, IdentityRole>()
+            .AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();
+
             var app = builder.Build();
+
+
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var service = scope.ServiceProvider;
+                var config = service.GetRequiredService<IConfiguration>();
+                await RoleSeeder.SeedRolesAsync(service);
+                await UserSeeder.SeedSuperAdminAsync(service, config);
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -26,6 +48,7 @@ namespace EquiLog.API
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
+            app.UseAuthentication();
 
 
             app.MapControllers();

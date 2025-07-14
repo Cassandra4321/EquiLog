@@ -1,9 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>c09f1598-5db0-48bd-a31e-ec768e7ca444</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,12 +19,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\EquiLog.DAL\EquiLog.DAL.csproj" />
+    <ProjectReference Include="..\EquiLog.Services\EquiLog.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EquiLog.DAL\EquiLog.DAL.csproj" />
-    <ProjectReference Include="..\EquiLog.Services\EquiLog.Services.csproj" />
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>
