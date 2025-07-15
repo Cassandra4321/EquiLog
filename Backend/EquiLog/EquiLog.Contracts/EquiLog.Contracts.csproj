@@ -7,9 +7,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\EquiLog.Contracts\EquiLog.Contracts.csproj" />
-    <ProjectReference Include="..\EquiLog.DAL\EquiLog.DAL.csproj" />
-  </ItemGroup>
-
 </Project>

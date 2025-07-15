@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using EquiLog.Contracts.Auth;
+using Microsoft.AspNetCore.Identity;
 
 namespace EquiLog.API.Helpers
 {
@@ -8,7 +9,7 @@ namespace EquiLog.API.Helpers
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            string[] roles = { "StableOwner", "Staff", "HorseOwner", "Rider" };
+            string[] roles = { Roles.StableOwner, Roles.Staff, Roles.HorseOwner, Roles.Rider };
 
             foreach (var role in roles)
             {
