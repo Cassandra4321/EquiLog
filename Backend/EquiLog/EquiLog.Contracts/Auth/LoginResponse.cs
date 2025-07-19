@@ -1,5 +1,4 @@
-﻿
-namespace EquiLog.Contracts.Auth
+﻿namespace EquiLog.Contracts.Auth
 {
     public class LoginResponse
     {
