@@ -1,13 +1,11 @@
 using EquiLog.API.Helpers;
 using EquiLog.DAL.Context;
 using EquiLog.DAL.Models;
-using EquiLog.Services;
 using EquiLog.Services.Interfaces;
 using EquiLog.Services.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
