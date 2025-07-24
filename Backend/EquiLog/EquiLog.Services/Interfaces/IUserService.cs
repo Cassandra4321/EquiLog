@@ -8,7 +8,7 @@ namespace EquiLog.Services.Interfaces
         Task<List<UserDto>> GetAllUsersAsync();
         Task<UserDto?> GetUserByIdAsync(string userId);
         Task<ServiceResult> CreateUserAsync(CreateUserRequest request);
-        Task<ServiceResult> UpdateUserAsync(string userId, CreateUserRequest request);
+        Task<ServiceResult> UpdateUserAsync(string userId, UpdateUserRequest request);
         Task<ServiceResult> DeleteUserAsync(string userId);
     }
 }

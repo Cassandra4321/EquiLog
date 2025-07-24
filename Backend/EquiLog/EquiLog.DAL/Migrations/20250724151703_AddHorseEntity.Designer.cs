@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EquiLog.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250721115018_AddHorseEntity")]
+    [Migration("20250724151703_AddHorseEntity")]
     partial class AddHorseEntity
     {
         /// <inheritdoc />
@@ -120,7 +120,8 @@ namespace EquiLog.DAL.Migrations
 
                     b.Property<string>("EmergencyContactNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<string>("FeedingInstructions")
                         .HasColumnType("nvarchar(max)");
@@ -128,8 +129,9 @@ namespace EquiLog.DAL.Migrations
                     b.Property<string>("FlyMask")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Gender")
-                        .HasColumnType("int");
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HoofStatus")
                         .IsRequired()
@@ -144,7 +146,8 @@ namespace EquiLog.DAL.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
 
                     b.Property<string>("OtherInfo")
                         .HasColumnType("nvarchar(max)");
