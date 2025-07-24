@@ -52,6 +52,7 @@ namespace EquiLog.API
 
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IHorseService, HorseService>();
 
 
             var app = builder.Build();

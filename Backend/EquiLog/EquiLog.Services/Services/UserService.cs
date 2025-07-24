@@ -67,8 +67,13 @@ namespace EquiLog.Services.Services
             return ServiceResult.Ok();
         }
 
-        public async Task<ServiceResult> UpdateUserAsync(string userId, CreateUserRequest request)
+        public async Task<ServiceResult> UpdateUserAsync(string userId, UpdateUserRequest request)
         {
+            if (userId != request.Id)
+            {
+                return ServiceResult.Fail("User ID missmatch.");
+            }
+
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {

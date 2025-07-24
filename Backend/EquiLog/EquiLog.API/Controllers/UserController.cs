@@ -1,6 +1,5 @@
 ﻿using EquiLog.Contracts.Users;
 using EquiLog.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EquiLog.API.Controllers
@@ -31,12 +30,15 @@ namespace EquiLog.API.Controllers
         public async Task<ActionResult<UserDto>> GetUser(string id)
         {
             var user = await _userService.GetUserByIdAsync(id);
-            if (user == null) return NotFound();
+            if (user == null)
+            {
+                return NotFound();
+            }
             return Ok(user);
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest request)
         {
@@ -49,26 +51,35 @@ namespace EquiLog.API.Controllers
         }
 
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UpdateUser(string id, [FromBody] CreateUserRequest request)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUserRequest request)
         {
+            if (id != request.Id)
+            {
+                return BadRequest();
+            }
+
             var result = await _userService.UpdateUserAsync(id, request);
             if (!result.Success)
             {
-                return BadRequest(result.ErrorMessage);
+                return NotFound(result.ErrorMessage);
             }
-            return Ok();
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteUser(string id)
         {
             var result = await _userService.DeleteUserAsync(id);
-            if (!result.Success) return NotFound(result.ErrorMessage);
-            return Ok();
+            if (!result.Success)
+            {
+                return NotFound(result.ErrorMessage);
+            }
+            return NoContent();
         }
 
     }
