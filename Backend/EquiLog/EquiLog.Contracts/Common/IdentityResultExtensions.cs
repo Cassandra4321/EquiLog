@@ -14,7 +14,7 @@ namespace EquiLog.Contracts.Common
             var error = string.Join("; ", result.Errors.Select(e => e.Description));
             if (!string.IsNullOrWhiteSpace(prefix))
             {
-                error = $"{prefix}: error";    
+                error = $"{prefix}: {error}";
             }
             return ServiceResult.Fail(error);
         }
