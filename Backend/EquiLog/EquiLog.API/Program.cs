@@ -54,10 +54,7 @@ namespace EquiLog.API
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IHorseService, HorseService>();
 
-
             var app = builder.Build();
-
-
 
             using (var scope = app.Services.CreateScope())
             {
@@ -67,7 +64,6 @@ namespace EquiLog.API
                 await UserSeeder.SeedSuperAdminAsync(service, config);
             }
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();

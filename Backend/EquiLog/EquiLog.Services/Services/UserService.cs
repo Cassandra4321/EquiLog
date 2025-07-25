@@ -53,18 +53,12 @@ namespace EquiLog.Services.Services
             var result = await _userManager.CreateAsync(user, request.Password);
             if (!result.Succeeded)
             {
-                var error = string.Join("; ", result.Errors.Select(e => e.Description));
-                return ServiceResult.Fail(error);
+                return result.ToServiceResult();
             }
 
             var roleResult =  await _userManager.AddToRoleAsync(user, request.Role);
-            if (!roleResult.Succeeded)
-            {
-                var error = string.Join("; ", roleResult.Errors.Select(e => e.Description));
-                return ServiceResult.Fail($"User created, but failed to assign role: {error}");
-            }
 
-            return ServiceResult.Ok();
+            return roleResult.ToServiceResult("User craeted, but failed to assign role.");
         }
 
         public async Task<ServiceResult> UpdateUserAsync(string userId, UpdateUserRequest request)
@@ -88,15 +82,15 @@ namespace EquiLog.Services.Services
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
             {
-                var error = string.Join("; ", result.Errors.Select(e => e.Description));
-                return ServiceResult.Fail(error);
+                return result.ToServiceResult();
             }
 
             var currentRoles = await _userManager.GetRolesAsync(user);
             if (!currentRoles.Contains(request.Role))
             {
                 await _userManager.RemoveFromRolesAsync(user, currentRoles);
-                await _userManager.AddToRoleAsync(user, request.Role);
+                var roleResult = await _userManager.AddToRoleAsync(user, request.Role);
+                return roleResult.ToServiceResult("User updated, but role change failed");
             }
 
             return ServiceResult.Ok();
@@ -110,13 +104,33 @@ namespace EquiLog.Services.Services
             }
 
             var result = await _userManager.DeleteAsync(user);
-            if (!result.Succeeded)
+            return result.ToServiceResult();
+        }
+
+        public async Task<ServiceResult> ChangePasswordAsync(string userId, string currentPassword, string newPassword)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
             {
-                var error = string.Join("; ", result.Errors.Select(e => e.Description));
-                return ServiceResult.Fail(error);
+                return ServiceResult.Fail("User not found.");
             }
 
-            return ServiceResult.Ok();
+            var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+            return result.ToServiceResult("Password change failed.");
+        }
+
+        public async Task<ServiceResult> ResetPasswordAsync(string userId, string newPassword)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if ( user == null )
+            {
+                return ServiceResult.Fail("User not found");
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+
+            return result.ToServiceResult("Password reset failed");
         }
     }
 }
