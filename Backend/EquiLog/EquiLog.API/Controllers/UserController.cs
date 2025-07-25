@@ -1,6 +1,7 @@
 ﻿using EquiLog.Contracts.Users;
 using EquiLog.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace EquiLog.API.Controllers
 {
@@ -16,8 +17,7 @@ namespace EquiLog.API.Controllers
             _userService = userService;
         }
 
-        [HttpGet]
-        [Route("/api/Users")]
+        [HttpGet("all")]
         [ProducesResponseType(typeof(List<UserDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<List<UserDto>>> GetAllUsers()
         {
@@ -82,5 +82,39 @@ namespace EquiLog.API.Controllers
             return NoContent();
         }
 
+        [HttpPost("change-password")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User ID not found in the token.");
+            }
+
+            var result = await _userService.ChangePasswordAsync(request.UserId, request.CurrentPassword, request.NewPassword);
+            if (!result.Success)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
+
+            return Ok("Password changed successfully!");
+        }
+
+        [HttpPost("reset-password")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            var result = await _userService.ResetPasswordAsync(request.UserId, request.NewPassword);
+            if (!result.Success)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
+            return Ok("Password reset successfully.");
+        }
     }
 }
