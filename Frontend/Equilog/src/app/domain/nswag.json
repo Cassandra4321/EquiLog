@@ -1,11 +1,9 @@
 {
-    "runtime": "WinX64",
+    "runtime": "Net90",
     "defaultVariables": null,
     "documentGenerator": {
       "fromDocument": {
-        "url": "https://localhost:7062/swagger/v1/swagger.json",
-        "output": null,
-        "newLineBehavior": "Auto"
+        "url": "https://localhost:7062/swagger/v1/swagger.json"
       }
     },
     "codeGenerators": {
@@ -13,11 +11,12 @@
         "className": "ApiClient",
         "moduleName": "",
         "typeScriptVersion": 4.7,
-        "template": "Angular",
+        "template": "Fetch",
         "promiseType": "Promise",
         "httpClass": "HttpClient",
         "withCredentials": false,
         "useSingletonProvider": true,
+        "injectionTokenType": "OpaqueToken",
         "rxJsVersion": 6.0,
         "dateTimeType": "Date",
         "nullValue": "Undefined",
