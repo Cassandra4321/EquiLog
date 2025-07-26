@@ -1,13 +1,15 @@
-﻿using EquiLog.Contracts.Users;
+﻿using EquiLog.Contracts.Auth;
+using EquiLog.Contracts.Users;
 using EquiLog.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace EquiLog.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Roles = "StableOwner")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -17,7 +19,7 @@ namespace EquiLog.API.Controllers
             _userService = userService;
         }
 
-        [HttpGet("all")]
+        [HttpGet("users")]
         [ProducesResponseType(typeof(List<UserDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<List<UserDto>>> GetAllUsers()
         {
@@ -38,6 +40,7 @@ namespace EquiLog.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Roles.StableOwner)]
         [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest request)
@@ -51,6 +54,7 @@ namespace EquiLog.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = Roles.StableOwner)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -70,6 +74,7 @@ namespace EquiLog.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = Roles.StableOwner)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteUser(string id)
@@ -104,6 +109,7 @@ namespace EquiLog.API.Controllers
         }
 
         [HttpPost("reset-password")]
+        [Authorize(Roles = Roles.StableOwner)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
