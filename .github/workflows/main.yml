@@ -31,3 +31,20 @@ jobs:
     - name: Show failure message
       if: failure()
       run: echo "❌ Something went wrong when building!"
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Install frontend dependencies
+      working-directory: Frontend/Equilog
+      run: npm ci
+
+    - name: Build frontend
+      working-directory: Frontend/Equilog
+      run: npm run build --if-present
+
+    - name: Frontend build success message
+      if: success()
+      run: echo "✅ Angular frontend built successfully!"
