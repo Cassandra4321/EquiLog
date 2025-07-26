@@ -59,5 +59,79 @@ namespace EquiLog.API.Helpers
                 }
             }
         }
+
+        public static async Task SeedTestUsersAsync(IServiceProvider serviceProvider)
+        {
+            var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+
+            var horseOwnerEmail = "horseowner@test.com";
+            var horseOwnerPassword = "Test123!";
+
+            var existingHorseOwner = await userManager.FindByEmailAsync(horseOwnerEmail);
+            if (existingHorseOwner == null)
+            {
+                var horseOwnerUser = new AppUser
+                {
+                    UserName = horseOwnerEmail,
+                    Email = horseOwnerEmail,
+                    FirstName = "Test",
+                    LastName = "HorseOwner",
+                    EmailConfirmed = true,
+                    PhoneNumberConfirmed = true
+                };
+
+                var result = await userManager.CreateAsync(horseOwnerUser, horseOwnerPassword);
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(horseOwnerUser, Roles.HorseOwner);
+                }
+            }
+
+            var riderEmail = "rider@test.com";
+            var riderPassword = "Test123!";
+
+            var existingRider = await userManager.FindByEmailAsync(riderEmail);
+            if (existingRider == null)
+            {
+                var riderUser = new AppUser
+                {
+                    UserName = riderEmail,
+                    Email = riderEmail,
+                    FirstName = "Test",
+                    LastName = "Rider",
+                    EmailConfirmed = true,
+                    PhoneNumberConfirmed = true
+                };
+
+                var result = await userManager.CreateAsync(riderUser, riderPassword);
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(riderUser, Roles.Rider);
+                }
+            }
+
+            var staffEmail = "staff@test.com";
+            var staffPassword = "Test123!";
+
+            var existingStaff = await userManager.FindByEmailAsync(staffEmail);
+            if (existingStaff == null)
+            {
+                var staffUser = new AppUser
+                {
+                    UserName = staffEmail,
+                    Email = staffEmail,
+                    FirstName = "Test",
+                    LastName = "Staff",
+                    EmailConfirmed = true,
+                    PhoneNumberConfirmed = true
+                };
+
+                var result = await userManager.CreateAsync(staffUser, staffPassword);
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(staffUser, Roles.Staff);
+                }
+            }
+        }
     }
 }

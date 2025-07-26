@@ -9,5 +9,8 @@ namespace EquiLog.DAL.Context
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<Horse> Horses { get; set; } = null!;
+
+        public DbSet<RidingArena> RidingArena { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
     }
 }
