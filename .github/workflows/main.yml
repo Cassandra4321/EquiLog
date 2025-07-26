@@ -12,7 +12,10 @@ jobs:
     steps:
     - name: Check out code
       uses: actions/checkout@v4
-
+      
+    # ---------------------
+    # 🧱 Backend (.NET)
+    # ---------------------
     - name: Set up .NET
       uses: actions/setup-dotnet@v3
       with:
@@ -24,14 +27,9 @@ jobs:
     - name: Build project
       run: dotnet build Backend/EquiLog/EquiLog.sln --no-restore
 
-    - name: Show success message
-      if: success()
-      run: echo "✅ Build was successful!"
-
-    - name: Show failure message
-      if: failure()
-      run: echo "❌ Something went wrong when building!"
-
+    # ---------------------
+    # 🌐 Frontend (Angular)
+    # ---------------------
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
@@ -41,10 +39,17 @@ jobs:
       working-directory: Frontend/Equilog
       run: npm ci
 
-    - name: Build frontend
+    - name: Build Angular project
       working-directory: Frontend/Equilog
       run: npm run build --if-present
 
-    - name: Frontend build success message
+    # ---------------------
+    # ✅ Feedback
+    # ---------------------
+    - name: Show success message
       if: success()
-      run: echo "✅ Angular frontend built successfully!"
+      run: echo "✅ Build was successful!"
+
+    - name: Show failure message
+      if: failure()
+      run: echo "❌ Something went wrong when building!"
