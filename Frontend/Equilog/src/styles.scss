@@ -1,1 +1,39 @@
-/* You can add global styles to this file, and also import other style files */
+@import "bootstrap/scss/bootstrap";
+
+.frontpage-header-title {
+  font-family: 'Quicksand', Arial, sans-serif;
+  font-weight: 700;
+  color: #7c5e3c;
+}
+
+.frontpage-subtitle {
+  color: #e8b47b;
+  font-size: 1.2rem;
+}
+
+.frontpage-hero {
+  background: #f5e9da;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 24px rgba(124, 94, 60, 0.08);
+}
+
+.frontpage-feature-card {
+  background: #f5e9da;
+  border-radius: 1rem;
+  box-shadow: 0 2px 12px rgba(124, 94, 60, 0.08);
+  border: none;
+}
+
+.frontpage-feature-img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #e8b47b;
+  margin-bottom: 1rem;
+}
+
+.frontpage-logo {
+  width: 90px;
+  margin-bottom: 1rem;
+}
