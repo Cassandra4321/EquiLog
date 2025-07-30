@@ -112,7 +112,21 @@ namespace EquiLog.API
 
             builder.Services.AddAuthorization();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngularApp", policy =>
+                {
+                    policy.WithOrigins("http://localhost:4200")
+                          .AllowAnyMethod()
+                          .AllowAnyHeader()
+                          .AllowCredentials();
+                });
+            });
+
+
             var app = builder.Build();
+
+            app.UseCors("AllowAngularApp");
 
             using (var scope = app.Services.CreateScope())
             {
