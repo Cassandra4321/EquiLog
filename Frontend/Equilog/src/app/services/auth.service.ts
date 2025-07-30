@@ -1,6 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { ApiClient, LoginRequest, LoginResponse } from '../domain/client';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { jwtDecode } from 'jwt-decode';
+
+  interface JwtPayload {
+  roles: string[];
+  email: string;
+  exp: number;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -52,4 +59,16 @@ export class AuthService {
   private hasToken(): boolean {
     return !!localStorage.getItem(this.TOKEN_KEY);
   }
+
+  getUserRoles(): string[] {
+    const token = this.getToken();
+    if(!token) {
+        return [];
+    }
+
+    const decodedToken = jwtDecode<JwtPayload>(token);
+    return decodedToken.roles || [];
+  }
 }
+
+
