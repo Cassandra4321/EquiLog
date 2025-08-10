@@ -3,12 +3,15 @@ import { AuthService } from '../../services/auth.service';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HomeButtonComponent } from '../../components/home-button/home-button.component';
+import { FooterComponent } from '../../components/footer/footer.component';
+import { AuthButtonComponent } from '../../components/auth-button/auth-button.component';
 
 @Component({
   selector: 'app-login-page',
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, HomeButtonComponent, FooterComponent, AuthButtonComponent],
   templateUrl: './login-page.component.html',
-  styleUrl: './login-page.component.scss',
+  styleUrls: ['./login-page.component.scss'],
   standalone: true
 })
 export class LoginPageComponent {
@@ -18,6 +21,8 @@ export class LoginPageComponent {
 
   private authService = inject(AuthService);
   private router = inject(Router);
+
+  isLoggedIn$ = this.authService.isLoggedIn();
 
   login() {
     this.errorMessage = '';
