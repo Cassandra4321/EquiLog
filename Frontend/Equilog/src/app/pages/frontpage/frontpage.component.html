@@ -1,40 +1,70 @@
-<app-auth-button></app-auth-button>
-<div class="container min-vh-100 d-flex flex-column align-items-center bg-light py-4">
-  <header class="text-center mb-4">
-    <h1 class="frontpage-header-title mb-2">Welcome to EquiLog Stable</h1>
-    <p class="frontpage-subtitle mb-4">Your digital home for horses, owners, and stable management</p>
-  </header>
+<div class="frontpage-wrapper">
+  <app-header *ngIf="isLoggedIn$ | async"></app-header>
 
-  <section class="frontpage-hero d-flex flex-column flex-md-row align-items-center justify-content-center p-4 mb-5 w-100">
-    <img src="stable2.jpg" alt="Beautiful Stable" class="img-fluid rounded shadow mb-3 mb-md-0 me-md-4" style="width:260px; height:180px; object-fit:cover;">
-    <div>
-      <h2 class="fw-semibold mb-2" style="color:#7c5e3c;">Manage your stable with ease</h2>
-      <p class="mb-0">EquiLog helps stable owners and horse owners keep track of horses, schedules, and stable activities—all in one place.</p>
-    </div>
-  </section>
+  <div class="auth-button-positioned" *ngIf="(isLoggedIn$ | async) === false">
+    <app-auth-button></app-auth-button>
+  </div>
 
-  <section class="row w-100 justify-content-center g-4 mb-5">
-    <div class="col-12 col-md-4">
-      <div class="card frontpage-feature-card text-center p-4 h-100">
-        <img src="horse2.jpg" alt="Horses" class="frontpage-feature-img mx-auto" />
-        <h3 class="fw-semibold mb-2" style="color:#7c5e3c;">All Your Horses</h3>
-        <p>View and manage all horses in your stable, with detailed profiles and history.</p>
+  <div class="container min-vh-100 d-flex flex-column align-items-center bg-light py-4">
+    
+    <header class="text-center mb-4" [ngClass]="{'logged-in-header': isLoggedIn$ | async}">
+      <ng-container *ngIf="isLoggedIn$ | async; else welcomeHeader">
+        <h1 class="frontpage-header-title mb-2">Welcome back to EquiLog Stable</h1>
+        <p class="frontpage-subtitle mb-4">Your dashboard for managing horses, schedules, and stable activities</p>
+      </ng-container>
+      
+      <ng-template #welcomeHeader>
+        <h1 class="frontpage-header-title mb-2">Welcome to EquiLog Stable</h1>
+        <p class="frontpage-subtitle mb-4">Your digital home for horses, owners, and stable management</p>
+      </ng-template>
+    </header>
+
+    <section class="frontpage-hero d-flex flex-column flex-md-row align-items-center justify-content-center p-4 mb-5 w-100">
+      <img src="stable2.jpg" alt="Beautiful Stable" class="img-fluid rounded shadow mb-3 mb-md-0 me-md-4" style="width:260px; height:180px; object-fit:cover;">
+      <div>
+        <h2 class="fw-semibold mb-2" style="color:#7c5e3c;">
+          <ng-container *ngIf="isLoggedIn$ | async; else manageStableText">
+            Your stable management hub
+          </ng-container>
+          <ng-template #manageStableText>
+            Manage your stable with ease
+          </ng-template>
+        </h2>
+        <p class="mb-0">
+          <ng-container *ngIf="isLoggedIn$ | async; else publicDescription">
+            Access all your stable management tools, check your horses, and stay connected with the community.
+          </ng-container>
+          <ng-template #publicDescription>
+            EquiLog helps stable owners and horse owners keep track of horses, schedules, and stable activities—all in one place.
+          </ng-template>
+        </p>
       </div>
-    </div>
-    <div class="col-12 col-md-4">
-      <div class="card frontpage-feature-card text-center p-4 h-100">
-        <img src="rider1.jpg" alt="Owners" class="frontpage-feature-img mx-auto" />
-        <h3 class="fw-semibold mb-2" style="color:#7c5e3c;">Owners & Communication</h3>
-        <p>Connect with horse owners, share updates, and keep everyone informed.</p>
+    </section>
+
+    <section class="row w-100 justify-content-center g-4 mb-5">
+      <div class="col-12 col-md-4">
+        <div class="card frontpage-feature-card text-center p-4 h-100">
+          <img src="horse2.jpg" alt="Horses" class="frontpage-feature-img mx-auto" />
+          <h3 class="fw-semibold mb-2" style="color:#7c5e3c;">All Your Horses</h3>
+          <p>View and manage all horses in your stable, with detailed profiles and history.</p>
+        </div>
       </div>
-    </div>
-    <div class="col-12 col-md-4">
-      <div class="card frontpage-feature-card text-center p-4 h-100">
-        <img src="jumping1.jpg" alt="Schedule" class="frontpage-feature-img mx-auto" />
-        <h3 class="fw-semibold mb-2" style="color:#7c5e3c;">Stable Schedule</h3>
-        <p>Organize feeding, training, and events with an easy-to-use calendar.</p>
+      <div class="col-12 col-md-4">
+        <div class="card frontpage-feature-card text-center p-4 h-100">
+          <img src="rider1.jpg" alt="Owners" class="frontpage-feature-img mx-auto" />
+          <h3 class="fw-semibold mb-2" style="color:#7c5e3c;">Owners & Communication</h3>
+          <p>Connect with horse owners, share updates, and keep everyone informed.</p>
+        </div>
       </div>
-    </div>
-  </section>
+      <div class="col-12 col-md-4">
+        <div class="card frontpage-feature-card text-center p-4 h-100">
+          <img src="jumping1.jpg" alt="Schedule" class="frontpage-feature-img mx-auto" />
+          <h3 class="fw-semibold mb-2" style="color:#7c5e3c;">Stable Schedule</h3>
+          <p>Organize feeding, training, and events with an easy-to-use calendar.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <app-footer></app-footer>
 </div>
-<app-footer></app-footer>

@@ -1,0 +1,50 @@
+<header class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+  <div class="container">
+
+    <a class="navbar-brand d-flex align-items-center" routerLink="/">
+      <i class="fas fa-horse-head me-2" style="color: #7c5e3c;"></i>
+      <span class="fw-bold" style="color: #7c5e3c;">EquiLog</span>
+    </a>
+
+    <!-- Mobile toggle button -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <!-- Will update here with links to correct pages when implemented!!-->
+      <ul class="navbar-nav me-auto" *ngIf="isLoggedIn$ | async">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/" routerLinkActive="active">
+            <i class="fas fa-user me-1"></i> My Profile
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/" routerLinkActive="active">
+            <i class="fas fa-calendar-plus me-1"></i> Book Arena
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/" routerLinkActive="active">
+            <i class="fas fa-horse me-1"></i> My Horses
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/" routerLinkActive="active">
+            <i class="fas fa-calendar me-1"></i> Schedule
+          </a>
+        </li>
+        <!-- Admin only links, will implement later on) -->
+        <!-- <li class="nav-item" *ngIf="isAdmin$ | async">
+          <a class="nav-link" routerLink="/admin" routerLinkActive="active">
+            <i class="fas fa-cog me-1"></i> Admin Panel
+          </a>
+        </li> -->
+      </ul>
+
+      <div class="navbar-nav">
+        <app-auth-button></app-auth-button>
+      </div>
+    </div>
+  </div>
+</header>

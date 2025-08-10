@@ -1,0 +1,65 @@
+.frontpage-wrapper {
+  position: relative;
+}
+
+.auth-button-positioned {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+}
+
+.logged-in-header {
+  margin-top: 2rem;
+}
+
+
+.quick-actions {
+  max-width: 800px;
+  
+  .btn {
+    border-color: #7c5e3c;
+    color: #7c5e3c;
+    transition: all 0.3s ease;
+    min-height: 120px;
+    
+    &:hover {
+      background-color: #7c5e3c;
+      border-color: #5d4530;
+      color: white;
+    }
+    
+    i {
+      color: inherit;
+    }
+  }
+}
+
+.frontpage-feature-card {
+  border: 1px solid #e0e0e0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+}
+
+.frontpage-feature-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+
+.frontpage-header-title {
+  color: #7c5e3c;
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.frontpage-subtitle {
+  color: #6c757d;
+  font-size: 1.1rem;
+}

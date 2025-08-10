@@ -3,13 +3,12 @@ import { AuthService } from '../../services/auth.service';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HomeButtonComponent } from '../../components/home-button/home-button.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { AuthButtonComponent } from '../../components/auth-button/auth-button.component';
 
 @Component({
   selector: 'app-login-page',
-  imports: [CommonModule, FormsModule, RouterModule, HomeButtonComponent, FooterComponent, AuthButtonComponent],
+  imports: [CommonModule, FormsModule, RouterModule, FooterComponent, AuthButtonComponent],
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.scss'],
   standalone: true
@@ -39,7 +38,7 @@ export class LoginPageComponent {
 
     this.authService.login(this.email, this.password).subscribe({
       next: () => {
-        this.router.navigate(['/homepage']);
+        this.router.navigate(['/']);
       },
       error: (err) => {
         console.error('Login failed', err);
