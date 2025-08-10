@@ -1,0 +1,13 @@
+<div class="auth-button-container">
+  <ng-container *ngIf="isLoggedIn$ | async; else loginButton">
+    <button class="btn btn-brown btn-sm" (click)="logout()">
+      <i class="fas fa-sign-out-alt me-1"></i> Log out
+    </button>
+  </ng-container>
+
+  <ng-template #loginButton>
+    <button class="btn btn-brown btn-sm" (click)="login()">
+      <i class="fas fa-sign-in-alt me-1"></i> Log in
+    </button>
+  </ng-template>
+</div>

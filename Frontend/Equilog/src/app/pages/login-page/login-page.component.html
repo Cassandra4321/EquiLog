@@ -1,11 +1,14 @@
 <div class="login-container d-flex align-items-center justify-content-center p-3">
-  <a routerLink="/" class="back-to-home">
-    <i class="fas fa-arrow-left me-2"></i>Back to Home
-  </a>
-  
+<app-home-button></app-home-button>
+<app-auth-button></app-auth-button>
+
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div *ngIf="isLoggedIn$ | async; else loginFormTemplate" class="card login-card text-center p-4">
+            <h2>You are already logged in!</h2>
+        </div>
+        <ng-template #loginFormTemplate>
         <div class="card login-card">
           <div class="login-header">
             <div class="horse-icon">
@@ -68,11 +71,9 @@
             </form>
           </div>
         </div>
-        
-        <div class="text-center mt-4" style="color:#7c5e3c; opacity:0.8;">
-          <small>© 2025 EquiLog Stable. All rights reserved.</small>
-        </div>
+        </ng-template>
       </div>
     </div>
   </div>
 </div>
+<app-footer></app-footer>

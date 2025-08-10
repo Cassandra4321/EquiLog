@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
+import { FooterComponent } from '../../components/footer/footer.component';
+import { AuthButtonComponent } from '../../components/auth-button/auth-button.component';
 
 @Component({
   selector: 'app-homepage',
-  imports: [],
+  imports: [FooterComponent, AuthButtonComponent],
   templateUrl: './homepage.component.html',
-  styleUrl: './homepage.component.scss'
+  styleUrls: ['./homepage.component.scss']
 })
 export class HomepageComponent {
 

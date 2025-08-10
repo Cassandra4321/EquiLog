@@ -1,0 +1,18 @@
+.auth-button-container {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  
+  .btn-brown {
+    color: #7c5e3c;
+    border-color: #7c5e3c;
+    background-color: transparent;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      color: #fff;
+      background-color: #7c5e3c;
+      border-color: #5d4530;
+    }
+  }
+}
