@@ -7,11 +7,16 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-frontpage',
-  imports: [FooterComponent, AuthButtonComponent, HeaderComponent, CommonModule],
-  templateUrl: './frontpage.component.html'
+  imports: [
+    FooterComponent,
+    AuthButtonComponent,
+    HeaderComponent,
+    CommonModule,
+  ],
+  templateUrl: './frontpage.component.html',
 })
 export class FrontpageComponent {
   private authService = inject(AuthService);
-  
+
   isLoggedIn$ = this.authService.isLoggedIn();
 }

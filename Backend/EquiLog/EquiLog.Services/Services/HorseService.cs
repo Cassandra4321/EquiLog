@@ -18,8 +18,8 @@ namespace EquiLog.Services.Services
 
         public async Task<List<HorseDto>> GetAllHorsesAsync()
         {
-            var horses = await _context.Horses.ToListAsync();
-            return horses.Select(HorseMapper.ToDto).ToList();   
+            var horses = await _context.Horses.Include(h => h.Owner).ToListAsync();
+            return horses.Select(HorseMapper.ToDto).ToList();
         }
 
         public async Task<HorseDto?> GetHorseByIdAsync(int id)
@@ -33,7 +33,9 @@ namespace EquiLog.Services.Services
             return HorseMapper.ToDto(horse);
         }
 
-        public async Task<(HorseDto? Horse, ServiceResult Result)> CreateHorseAsync(CreateHorseRequest request)
+        public async Task<(HorseDto? Horse, ServiceResult Result)> CreateHorseAsync(
+            CreateHorseRequest request
+        )
         {
             try
             {
@@ -45,7 +47,10 @@ namespace EquiLog.Services.Services
             }
             catch (Exception ex)
             {
-                return (Horse: null, Result: ServiceResult.Fail($"Could not create the horse: {ex.Message}"));
+                return (
+                    Horse: null,
+                    Result: ServiceResult.Fail($"Could not create the horse: {ex.Message}")
+                );
             }
         }
 
@@ -69,6 +74,12 @@ namespace EquiLog.Services.Services
             }
         }
 
+        public async Task<List<HorseDto>> GetHorsesByOwnerAsync(string ownerId)
+        {
+            var horses = await _context.Horses.Where(h => h.OwnerId == ownerId).ToListAsync();
+            return horses.Select(HorseMapper.ToDto).ToList();
+        }
+
         public async Task<ServiceResult> DeleteHorseAsync(int id)
         {
             var horse = await _context.Horses.FindAsync(id);
@@ -83,7 +94,7 @@ namespace EquiLog.Services.Services
                 await _context.SaveChangesAsync();
                 return ServiceResult.Ok();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return ServiceResult.Fail($"Could not remove the horse: {ex.Message}");
             }

@@ -7,6 +7,7 @@
         public int Age { get; set; }
         public string ImageUrl { get; set; } = string.Empty!;
         public string OwnerId { get; set; } = string.Empty!;
+        public string OwnerName { get; set; } = string.Empty!;
         public string EmergencyContactNumber { get; set; } = string.Empty!;
         public string? CoRiderName { get; set; }
         public string Gender { get; set; } = string.Empty!;

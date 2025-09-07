@@ -1,9 +1,9 @@
-﻿using EquiLog.Contracts.Auth;
+﻿using System.Security.Claims;
+using EquiLog.Contracts.Auth;
 using EquiLog.Contracts.Horses;
 using EquiLog.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace EquiLog.API.Controllers
 {
@@ -83,7 +83,8 @@ namespace EquiLog.API.Controllers
             }
 
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var isStableOwnerOrStaff = User.IsInRole(Roles.StableOwner) || User.IsInRole(Roles.Staff);
+            var isStableOwnerOrStaff =
+                User.IsInRole(Roles.StableOwner) || User.IsInRole(Roles.Staff);
 
             if (!isStableOwnerOrStaff && existingHorse.OwnerId != currentUserId)
             {
@@ -98,6 +99,18 @@ namespace EquiLog.API.Controllers
             return NoContent();
         }
 
+        [HttpGet("mine")]
+        [ProducesResponseType(typeof(List<HorseDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<List<HorseDto>>> GetMyHorses()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+            return Ok(await _horseService.GetHorsesByOwnerAsync(userId));
+        }
+
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -110,7 +123,8 @@ namespace EquiLog.API.Controllers
             }
 
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var isStableOwnerOrStaff = User.IsInRole(Roles.StableOwner) || User.IsInRole(Roles.Staff);
+            var isStableOwnerOrStaff =
+                User.IsInRole(Roles.StableOwner) || User.IsInRole(Roles.Staff);
 
             if (!isStableOwnerOrStaff && existingHorse.OwnerId != currentUserId)
             {
