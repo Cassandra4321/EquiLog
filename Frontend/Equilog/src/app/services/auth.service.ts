@@ -3,18 +3,18 @@ import { ApiClient, LoginRequest, LoginResponse } from '../domain/client';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 
-  interface JwtPayload {
+interface JwtPayload {
   roles: string[];
   email: string;
   exp: number;
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-  private readonly TOKEN_KEY = 'auth_token';
-  private readonly USER_EMAIL_KEY = 'user_email';
+  private readonly TOKEN_KEY = 'equilog_auth_token';
+  private readonly USER_EMAIL_KEY = 'equilog_user_email';
 
   private loggedIn$ = new BehaviorSubject<boolean>(this.hasToken());
 
@@ -24,17 +24,20 @@ export class AuthService {
     const request = new LoginRequest({ email, password });
 
     return new Observable(observer => {
-      this.apiClient.login(request).then(response => {
-        if (response?.token) {
-          localStorage.setItem(this.TOKEN_KEY, response.token);
-          localStorage.setItem(this.USER_EMAIL_KEY, response.email || '');
-          this.loggedIn$.next(true);
-        }
-        observer.next(response);
-        observer.complete();
-      }).catch(error => {
-        observer.error(error);
-      });
+      this.apiClient
+        .login(request)
+        .then(response => {
+          if (response?.token) {
+            localStorage.setItem(this.TOKEN_KEY, response.token);
+            localStorage.setItem(this.USER_EMAIL_KEY, response.email || '');
+            this.loggedIn$.next(true);
+          }
+          observer.next(response);
+          observer.complete();
+        })
+        .catch(error => {
+          observer.error(error);
+        });
     });
   }
 
@@ -62,13 +65,24 @@ export class AuthService {
 
   getUserRoles(): string[] {
     const token = this.getToken();
-    if(!token) {
-        return [];
+    if (!token) {
+      return [];
     }
 
     const decodedToken = jwtDecode<JwtPayload>(token);
     return decodedToken.roles || [];
   }
+
+  isTokenValid(): boolean {
+    const token = this.getToken();
+    if (!token) return false;
+
+    try {
+      const decodedToken = jwtDecode<JwtPayload>(token);
+      const currentTime = Date.now() / 1000;
+      return decodedToken.exp > currentTime;
+    } catch {
+      return false;
+    }
+  }
 }
-
-

@@ -14,6 +14,10 @@ namespace EquiLog.Services.Mappers
                 Age = horse.Age,
                 ImageUrl = horse.ImageUrl,
                 OwnerId = horse.OwnerId,
+                OwnerName =
+                    horse.Owner != null
+                        ? $"{horse.Owner.FirstName} {horse.Owner.LastName}"
+                        : string.Empty,
                 EmergencyContactNumber = horse.EmergencyContactNumber,
                 CoRiderName = horse.CoRiderName,
                 Gender = horse.Gender,
@@ -25,7 +29,7 @@ namespace EquiLog.Services.Mappers
                 TurnoutInstructions = horse.TurnoutInstructions,
                 IntakeInstructions = horse.IntakeInstructions,
                 FeedingInstructions = horse.FeedingInstructions,
-                OtherInfo = horse.OtherInfo
+                OtherInfo = horse.OtherInfo,
             };
         }
 
@@ -48,7 +52,7 @@ namespace EquiLog.Services.Mappers
                 TurnoutInstructions = request.TurnoutInstructions,
                 IntakeInstructions = request.IntakeInstructions,
                 FeedingInstructions = request.FeedingInstructions,
-                OtherInfo = request.OtherInfo
+                OtherInfo = request.OtherInfo,
             };
         }
 

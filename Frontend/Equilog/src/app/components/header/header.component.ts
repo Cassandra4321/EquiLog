@@ -9,11 +9,10 @@ import { AuthButtonComponent } from '../auth-button/auth-button.component';
   standalone: true,
   imports: [CommonModule, RouterModule, AuthButtonComponent],
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent {
   private authService = inject(AuthService);
 
   isLoggedIn$ = this.authService.isLoggedIn();
-  
 }

@@ -8,15 +8,21 @@ import { AuthButtonComponent } from '../../components/auth-button/auth-button.co
 
 @Component({
   selector: 'app-login-page',
-  imports: [CommonModule, FormsModule, RouterModule, FooterComponent, AuthButtonComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    FooterComponent,
+    AuthButtonComponent,
+  ],
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.scss'],
-  standalone: true
+  standalone: true,
 })
 export class LoginPageComponent {
-  email ='';
-  password ='';
-  errorMessage = '';  
+  email = '';
+  password = '';
+  errorMessage = '';
 
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -40,15 +46,16 @@ export class LoginPageComponent {
       next: () => {
         this.router.navigate(['/']);
       },
-      error: (err) => {
+      error: err => {
         console.error('Login failed', err);
 
         if (err.status === 401) {
           this.errorMessage = 'Invalid email or password. Please try again.';
         } else {
-          this.errorMessage = 'An error occurred during login. Please try again.';
+          this.errorMessage =
+            'An error occurred during login. Please try again.';
         }
-      }
+      },
     });
   }
 
@@ -57,4 +64,3 @@ export class LoginPageComponent {
     return emailRegex.test(email);
   }
 }
-
