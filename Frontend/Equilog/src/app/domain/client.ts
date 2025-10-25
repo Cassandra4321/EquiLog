@@ -463,9 +463,9 @@ export class ApiClient {
 
     /**
      * @param body (optional) 
-     * @return No Content
+     * @return OK
      */
-    horsePUT(id: number, body?: UpdateHorseRequest | undefined): Promise<void> {
+    horsePUT(id: number, body?: UpdateHorseRequest | undefined): Promise<HorseDto> {
         let url_ = this.baseUrl + "/api/Horse/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -479,6 +479,7 @@ export class ApiClient {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                "Accept": "text/plain"
             }
         };
 
@@ -487,12 +488,15 @@ export class ApiClient {
         });
     }
 
-    protected processHorsePUT(response: Response): Promise<void> {
+    protected processHorsePUT(response: Response): Promise<HorseDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 204) {
+        if (status === 200) {
             return response.text().then((_responseText) => {
-            return;
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = HorseDto.fromJS(resultData200);
+            return result200;
             });
         } else if (status === 400) {
             return response.text().then((_responseText) => {
@@ -513,7 +517,7 @@ export class ApiClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<void>(null as any);
+        return Promise.resolve<HorseDto>(null as any);
     }
 
     /**
@@ -563,8 +567,8 @@ export class ApiClient {
      * @param body (optional) 
      * @return OK
      */
-    create2(body?: CreateHorseRequest | undefined): Promise<HorseDto> {
-        let url_ = this.baseUrl + "/api/Horse/create";
+    createHorse(body?: CreateHorseRequest | undefined): Promise<HorseDto> {
+        let url_ = this.baseUrl + "/api/Horse/createHorse";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -579,11 +583,11 @@ export class ApiClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processCreate2(_response);
+            return this.processCreateHorse(_response);
         });
     }
 
-    protected processCreate2(response: Response): Promise<HorseDto> {
+    protected processCreateHorse(response: Response): Promise<HorseDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {

@@ -7,6 +7,7 @@
       <p class="frontpage-subtitle mb-4">Overview of your registered horses</p>
     </header>
 
+    <!-- LOADING -->
     <div
       *ngIf="loading"
       class="d-flex justify-content-center align-items-center py-5">
@@ -18,6 +19,7 @@
       </div>
     </div>
 
+    <!-- ERROR -->
     <div *ngIf="error && !loading" class="row justify-content-center">
       <div class="col-md-6">
         <div class="alert alert-danger text-center">
@@ -30,6 +32,7 @@
       </div>
     </div>
 
+    <!-- NO HORSES -->
     <div
       *ngIf="!loading && !error && myHorses.length === 0"
       class="text-center py-5">
@@ -37,11 +40,13 @@
       <p class="text-muted">You don't have any registered horses yet.</p>
       <button
         class="btn btn-primary mt-3"
-        style="background-color: #7c5e3c; border-color: #7c5e3c">
+        style="background-color: #7c5e3c; border-color: #7c5e3c"
+        (click)="startAddHorse()">
         Register your first horse
       </button>
     </div>
 
+    <!-- HORSES LIST -->
     <div *ngIf="!loading && !error && myHorses.length > 0" class="w-100">
       <div class="row mb-4">
         <div class="col-12 col-md-8">
@@ -52,18 +57,18 @@
                 class="btn btn-outline-secondary me-2">
                 Refresh
               </button>
-              <!--
-                <button
-                  class="btn btn-primary"
-                  style="background-color: #7c5e3c; border-color: #7c5e3c">
-                  Add horse
-                </button>
-                -->
+              <button
+                class="btn btn-primary"
+                style="background-color: #7c5e3c; border-color: #7c5e3c"
+                (click)="startAddHorse()">
+                Add horse
+              </button>
             </div>
           </div>
         </div>
       </div>
 
+      <!-- HORSE CARDS -->
       <div class="row justify-content-center g-4">
         <div
           *ngFor="let horse of myHorses; trackBy: trackByHorseId"
@@ -72,53 +77,262 @@
             <div class="position-relative">
               <img
                 [src]="horse.imageUrl || '/default-horse.png'"
-                [alt]="horse.name"
+                [alt]="horse.name || 'Unnamed horse'"
                 class="card-img-top"
                 style="height: 200px; object-fit: cover"
                 (error)="onImageError($event)"
                 loading="lazy" />
-
               <span
                 class="position-absolute top-0 end-0 m-2 badge bg-light text-dark">
-                {{ horse.age }} years
+                {{ horse.age ?? 0 }} years
               </span>
             </div>
 
             <div class="card-body d-flex flex-column">
               <h5 class="card-title fw-semibold" style="color: #7c5e3c">
-                {{ horse.name }}
+                {{ horse.name || 'Unnamed horse' }}
               </h5>
 
               <div class="mb-3 flex-grow-1">
                 <div *ngIf="horse.gender" class="mb-1">
-                  <small class="text-muted">
-                    <strong>Gender:</strong> {{ horse.gender }}
-                  </small>
+                  <small class="text-muted"
+                    ><strong>Gender:</strong> {{ horse.gender }}</small
+                  >
                 </div>
-
                 <div *ngIf="horse.pasture" class="mb-1">
-                  <small class="text-muted">
-                    <strong>Pasture:</strong> {{ horse.pasture }}
-                  </small>
+                  <small class="text-muted"
+                    ><strong>Pasture:</strong> {{ horse.pasture }}</small
+                  >
                 </div>
-
                 <div *ngIf="horse.ownerName" class="mb-1">
-                  <small class="text-muted">
-                    <strong>Owner:</strong> {{ horse.ownerName }}
-                  </small>
+                  <small class="text-muted"
+                    ><strong>Owner:</strong> {{ horse.ownerName }}</small
+                  >
                 </div>
               </div>
 
-              <!-- Action button 
-              <div class="d-grid gap-2">
-                <button class="btn btn-sm btn-outline-secondary">
+              <div class="d-grid gap-2 mt-2">
+                <button
+                  class="btn btn-sm btn-outline-secondary"
+                  (click)="startEditHorse(horse)">
                   Edit horse
                 </button>
-              </div> -->
+                <button
+                  class="btn btn-sm btn-outline-danger"
+                  (click)="deleteHorse(horse.id)">
+                  Delete
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- ADD / EDIT FORM -->
+    <div *ngIf="showForm && selectedHorse" id="horse-form" class="mt-5">
+      <h3>{{ isEditing ? 'Edit Horse' : 'Add Horse' }}</h3>
+
+      <form (ngSubmit)="onSubmitHorse()" #horseForm="ngForm">
+        <!-- Basic Info -->
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="horse-name" class="form-label">Name</label>
+            <input
+              id="horse-name"
+              type="text"
+              class="form-control"
+              [(ngModel)]="selectedHorse.name"
+              name="name"
+              required />
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="horse-age" class="form-label">Age</label>
+            <input
+              id="horse-age"
+              type="number"
+              class="form-control"
+              [(ngModel)]="selectedHorse.age"
+              name="age"
+              required />
+          </div>
+        </div>
+
+        <!-- Appearance & Gender -->
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="horse-gender" class="form-label">Gender</label>
+            <select
+              id="horse-gender"
+              class="form-select"
+              [(ngModel)]="selectedHorse.gender"
+              name="gender"
+              required>
+              <option value="">Select...</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="horse-image" class="form-label">Image URL</label>
+            <input
+              id="horse-image"
+              type="text"
+              class="form-control"
+              [(ngModel)]="selectedHorse.imageUrl"
+              name="imageUrl"
+              placeholder="https://example.com/horse.jpg" />
+          </div>
+        </div>
+
+        <!-- Care Info -->
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="horse-pasture" class="form-label">Pasture</label>
+            <input
+              id="horse-pasture"
+              type="text"
+              class="form-control"
+              [(ngModel)]="selectedHorse.pasture"
+              name="pasture" />
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="horse-hoof" class="form-label">Hoof Status</label>
+            <input
+              id="horse-hoof"
+              type="text"
+              class="form-control"
+              [(ngModel)]="selectedHorse.hoofStatus"
+              name="hoofStatus"
+              placeholder="e.g. Needs trimming soon" />
+          </div>
+        </div>
+
+        <!-- Equipment -->
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label for="horse-blanket" class="form-label">Blanket</label>
+            <input
+              id="horse-blanket"
+              type="text"
+              class="form-control"
+              [(ngModel)]="selectedHorse.blanket"
+              name="blanket"
+              placeholder="Type or none" />
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <label for="horse-flymask" class="form-label">Fly Mask</label>
+            <input
+              id="horse-flymask"
+              type="text"
+              class="form-control"
+              [(ngModel)]="selectedHorse.flyMask"
+              name="flyMask"
+              placeholder="Type or none" />
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <label for="horse-boots" class="form-label">Boots</label>
+            <input
+              id="horse-boots"
+              type="text"
+              class="form-control"
+              [(ngModel)]="selectedHorse.boots"
+              name="boots"
+              placeholder="Type or none" />
+          </div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="mb-3">
+          <label for="horse-turnout" class="form-label"
+            >Turnout Instructions</label
+          >
+          <textarea
+            id="horse-turnout"
+            class="form-control"
+            rows="2"
+            [(ngModel)]="selectedHorse.turnoutInstructions"
+            name="turnoutInstructions"></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="horse-intake" class="form-label"
+            >Intake Instructions</label
+          >
+          <textarea
+            id="horse-intake"
+            class="form-control"
+            rows="2"
+            [(ngModel)]="selectedHorse.intakeInstructions"
+            name="intakeInstructions"></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="horse-feeding" class="form-label"
+            >Feeding Instructions</label
+          >
+          <textarea
+            id="horse-feeding"
+            class="form-control"
+            rows="2"
+            [(ngModel)]="selectedHorse.feedingInstructions"
+            name="feedingInstructions"></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="horse-other" class="form-label">Other Info</label>
+          <textarea
+            id="horse-other"
+            class="form-control"
+            rows="2"
+            [(ngModel)]="selectedHorse.otherInfo"
+            name="otherInfo"></textarea>
+        </div>
+
+        <!-- Contacts -->
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="horse-emergency" class="form-label"
+              >Emergency Contact</label
+            >
+            <input
+              id="horse-emergency"
+              type="text"
+              class="form-control"
+              [(ngModel)]="selectedHorse.emergencyContactNumber"
+              name="emergencyContactNumber"
+              required />
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="horse-corider" class="form-label">Co-Rider Name</label>
+            <input
+              id="horse-corider"
+              type="text"
+              class="form-control"
+              [(ngModel)]="selectedHorse.coRiderName"
+              name="coRiderName" />
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="mt-4">
+          <button type="submit" class="btn btn-success me-2">
+            {{ isEditing ? 'Update' : 'Create' }}
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="showForm = false">
+            Cancel
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 

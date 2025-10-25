@@ -2,6 +2,7 @@
 using EquiLog.Contracts.Auth;
 using EquiLog.Contracts.Horses;
 using EquiLog.Services.Interfaces;
+using EquiLog.Services.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,7 +40,7 @@ namespace EquiLog.API.Controllers
             return Ok(horse);
         }
 
-        [HttpPost("create")]
+        [HttpPost("createHorse")]
         [ProducesResponseType(typeof(HorseDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> CreateHorse([FromBody] CreateHorseRequest request)
@@ -66,7 +67,7 @@ namespace EquiLog.API.Controllers
         }
 
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(HorseDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateHorse(int id, [FromBody] UpdateHorseRequest request)
@@ -91,12 +92,11 @@ namespace EquiLog.API.Controllers
                 return Forbid("You can only update your own horses.");
             }
 
-            var result = await _horseService.UpdateHorseAsync(id, request);
-            if (!result.Success)
-            {
-                return BadRequest(result.ErrorMessage);
-            }
-            return NoContent();
+            var updatedHorse = await _horseService.UpdateHorseAsync(id, request);
+            if (updatedHorse == null)
+                return BadRequest("Failed to update horse");
+
+            return Ok(updatedHorse);
         }
 
         [HttpGet("mine")]
