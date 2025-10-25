@@ -8,7 +8,7 @@ namespace EquiLog.Services.Interfaces
         Task<List<HorseDto>> GetAllHorsesAsync();
         Task<HorseDto?> GetHorseByIdAsync(int id);
         Task<(HorseDto? Horse, ServiceResult Result)> CreateHorseAsync(CreateHorseRequest request);
-        Task<ServiceResult> UpdateHorseAsync(int id, UpdateHorseRequest request);
+        Task<HorseDto?> UpdateHorseAsync(int id, UpdateHorseRequest request);
         Task<List<HorseDto>> GetHorsesByOwnerAsync(string ownerId);
         Task<ServiceResult> DeleteHorseAsync(int id);
     }

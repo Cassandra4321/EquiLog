@@ -54,24 +54,18 @@ namespace EquiLog.Services.Services
             }
         }
 
-        public async Task<ServiceResult> UpdateHorseAsync(int id, UpdateHorseRequest request)
+        public async Task<HorseDto?> UpdateHorseAsync(int id, UpdateHorseRequest request)
         {
             var horse = await _context.Horses.FindAsync(id);
             if (horse == null)
             {
-                return ServiceResult.Fail("Horse could not be found.");
+                return null;
             }
 
-            try
-            {
-                HorseMapper.UpdateHorseFromRequest(horse, request);
-                await _context.SaveChangesAsync();
-                return ServiceResult.Ok();
-            }
-            catch (Exception ex)
-            {
-                return ServiceResult.Fail($"Could not update the horse: {ex.Message}");
-            }
+            HorseMapper.UpdateHorseFromRequest(horse, request);
+            await _context.SaveChangesAsync();
+
+            return HorseMapper.ToDto(horse);
         }
 
         public async Task<List<HorseDto>> GetHorsesByOwnerAsync(string ownerId)
